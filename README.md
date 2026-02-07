@@ -5,16 +5,30 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenClaw](https://img.shields.io/badge/OpenClaw-2026.2.6+-blue.svg)](https://github.com/openclaw)
 [![Claw Desktop](https://img.shields.io/badge/Claw_Desktop-Compatible-green.svg)](https://claw.so)
+[![Security](https://img.shields.io/badge/Security-Safe_Operations_Only-brightgreen.svg)](#security-policy)
 
 This skill provides battle-tested workflows for managing OpenClaw agents via SSH/tmux, including provider configuration, security hardening, and troubleshooting. All procedures have been validated against real OpenClaw installations.
 
+## 🔒 Security Policy
+
+**This skill uses SAFE operations only:**
+- ✅ Read-only verification commands (`openclaw health`, `openclaw models status`)
+- ✅ OpenClaw's built-in CLI commands (`openclaw models auth`, `openclaw doctor`)
+- ✅ File permission changes (`chmod`) on OpenClaw config directories only
+- ❌ NO SSH key generation or modification
+- ❌ NO shell startup file modifications (`~/.bashrc`, `~/.zshrc`)
+- ❌ NO automated cron job creation
+- ❌ NO arbitrary system-level persistence mechanisms
+
+**All high-risk operations must be performed manually by the user.**
+
 ## 🎯 What This Skill Does
 
-- **Remote Setup**: Connect to OpenClaw installations via SSH, Tailscale, or tunnels
-- **Provider Config**: Configure AI model providers (zai, Anthropic, OpenAI, NVIDIA NIM, OpenRouter, Ollama)
+- **Remote Setup**: Connect to OpenClaw installations via existing SSH access
+- **Provider Config**: Configure AI model providers using OpenClaw's built-in commands
 - **Security Hardening**: Apply AI SAFE² framework with **reality-tested** procedures (no theoretical configs that fail)
 - **Troubleshooting**: Fix common issues with proven solutions
-- **Git Rollback**: Track every config change for easy rollback
+- **Git Rollback**: Track OpenClaw config changes for easy rollback
 
 ## 🚀 Quick Start
 

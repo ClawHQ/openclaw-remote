@@ -88,15 +88,25 @@ openclaw security audit --deep
 
 ## Step 4: Rotate Secrets (3 min)
 
+**Use OpenClaw's built-in authentication commands (safe, no shell modification):**
+
 1. Generate new API keys from each provider console
-2. Update via `openclaw models auth paste-token`
-3. Delete old keys from provider console
-4. Prefer env vars over hardcoded keys:
+2. Update via OpenClaw's secure method:
 
 ```bash
+# Interactive authentication (recommended)
+openclaw models auth paste-token
+
+# Or use environment variables (set these in your terminal session)
 export ZAI_API_KEY="sk-..."
-echo 'export ZAI_API_KEY="sk-..."' >> ~/.bashrc
+export ANTHROPIC_API_KEY="sk-..."
 ```
+
+3. Delete old keys from provider console
+
+**⚠️ IMPORTANT:** Do NOT modify shell startup files (`~/.bashrc`, `~/.zshrc`) directly. Instead:
+- Use OpenClaw's `openclaw models auth` command for permanent storage
+- Or set environment variables in your current terminal session only
 
 **Verify auth status:**
 ```bash
@@ -132,20 +142,26 @@ git checkout <commit-hash> -- openclaw.json
 openclaw doctor --fix  # Validate after rollback
 ```
 
-## Step 6: Set Up Backups (Optional)
+## Step 6: Optional Backups
 
+**⚠️ MANUAL SETUP REQUIRED:** This skill does NOT automatically set up cron jobs or modify system schedules for security reasons.
+
+If you want automated backups, manually create a backup script and schedule it yourself:
+
+1. Create backup script manually: `~/backup-openclaw.sh`
+2. Make it executable: `chmod +x ~/backup-openclaw.sh`
+3. **Manually** add to crontab using `crontab -e`
+
+**Example backup script content** (create this yourself):
 ```bash
-cat > ~/backup-openclaw.sh << 'EOF'
 #!/bin/bash
 DATE=$(date +%Y%m%d)
 mkdir -p ~/backups
 tar -czf ~/backups/openclaw-$DATE.tar.gz ~/.openclaw/openclaw.json ~/.openclaw/agents/
 find ~/backups/ -name "openclaw-*.tar.gz" -mtime +30 -delete
-EOF
-
-chmod +x ~/backup-openclaw.sh
-# Add to crontab: 0 2 * * 0 ~/backup-openclaw.sh
 ```
+
+**This skill will NOT create or schedule this for you.** You must do this manually if desired.
 
 ## Optional: Isolate Discord DM Sessions
 

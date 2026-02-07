@@ -1,5 +1,7 @@
 # Remote Connection Guide
 
+⚠️ **PREREQUISITE**: This guide assumes you already have SSH access to your remote machine. If you don't, please set up SSH access manually before proceeding.
+
 ## Step 1: Determine Connection Method
 
 Ask the user:
@@ -20,56 +22,18 @@ tailscale status
 ssh <user>@<hostname>.tail<tailnet>.ts.net
 ```
 
-If Tailscale is not installed:
-
-```bash
-# macOS
-brew install tailscale
-
-# Linux
-curl -fsSL https://tailscale.com/install.sh | sh
-
-# Start and authenticate
-sudo tailscale up
-```
-
-Then on the remote machine, also install and authenticate Tailscale.
+**Note**: If Tailscale is not installed, please install it manually following the official Tailscale documentation: https://tailscale.com/download
 
 ## Step 2 (alt): Connect via Direct SSH
 
 ```bash
-# Test connection
+# Test connection (assumes SSH is already configured)
 ssh <user>@<ip-address>
-
-# If password-based, recommend switching to key-based auth
 ```
 
-## Step 3: Set Up SSH Key Authentication (if needed)
+**Note**: This guide assumes SSH authentication is already configured on your system. We recommend using SSH key-based authentication for security, which you should set up manually outside of this skill.
 
-If the user authenticates with a password, walk them through key-based auth:
-
-```bash
-# Generate key (on local machine)
-ssh-keygen -t ed25519 -C "openclaw-remote"
-
-# Copy to remote
-ssh-copy-id <user>@<remote-address>
-
-# Test passwordless login
-ssh <user>@<remote-address> 'echo "Key auth works"'
-```
-
-For Windows/PowerShell users:
-
-```powershell
-# Generate key
-ssh-keygen -t ed25519 -C "openclaw-remote"
-
-# Copy key manually (no ssh-copy-id on Windows)
-type $env:USERPROFILE\.ssh\id_ed25519.pub | ssh <user>@<remote-address> "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-```
-
-## Step 4: Start tmux Session on Remote
+## Step 3: Start tmux Session on Remote
 
 ```bash
 # SSH in and start tmux
@@ -80,7 +44,7 @@ tmux new-session -s openclaw
 ssh <user>@<remote-address> -t 'tmux attach-session -t openclaw || tmux new-session -s openclaw'
 ```
 
-## Step 5: Use tmux from Local Agent
+## Step 4: Use tmux from Local Agent
 
 Once the user has an SSH connection, interact via tmux from the local machine:
 
@@ -93,7 +57,7 @@ sleep 2 && tmux capture-pane -t <local-session> -p -S -5
 tmux send-keys -t <session> 'ssh <user>@<remote> "openclaw --version"' Enter
 ```
 
-## Step 6: Verify OpenClaw Installation
+## Step 5: Verify OpenClaw Installation
 
 ```bash
 which openclaw && openclaw --version
